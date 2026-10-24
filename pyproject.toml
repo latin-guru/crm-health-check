@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "HubSpot-style CRM audit: data hygiene checks, pipeline and attribution reporting, and CRM-vs-billing ARR reconciliation on fictional data."
 readme = "README.md"
 requires-python = ">=3.11"
+authors = [{ name = "Kevin Gaviria" }]
 license = "LicenseRef-Showcase-View-Only"
 license-files = ["LICENSE"]
 dependencies = [
