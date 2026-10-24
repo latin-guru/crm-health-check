@@ -68,3 +68,12 @@ def test_data_volume_is_close_to_the_spec(generated_db):
     assert count("deal_stage_history") > count("deals")
     assert count("touchpoints") > 0
     assert count("billing_subscriptions") > 100
+
+
+def test_reconciliation_numbers_tie_out_to_the_dollar(generated_db, settings):
+    # An interviewer adding up the category column must land on the gap card exactly.
+    report = reconciliation_report(generated_db, settings["params"]["tolerance_usd"])
+    assert all(isinstance(row["delta"], int) for row in report["rows"])
+    assert sum(item["delta"] for item in report["summary"]) == report["gap"]
+    assert report["billing_total"] - report["crm_total"] == report["gap"]
+    assert report["waterfall"][-2]["end"] == report["billing_total"]

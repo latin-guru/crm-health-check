@@ -50,6 +50,13 @@ def attribution_report(con: duckdb.DuckDBPyConnection) -> dict:
 def reconciliation_report(con: duckdb.DuckDBPyConnection, tolerance_usd: float) -> dict:
     """Row-level recon plus totals, a count/delta summary per status, and waterfall steps."""
     rows = run_sql(con, "recon/reconciliation.sql", tolerance_usd=tolerance_usd)
+    # Status is decided on exact values in SQL. For display, every account is rounded to
+    # whole dollars once, here, and every total is summed from those rounded rows, so the
+    # category deltas add up to the gap card exactly (no off-by-a-dollar rounding drift).
+    for row in rows:
+        row["crm_arr"] = round(row["crm_arr"])
+        row["billing_arr"] = round(row["billing_arr"])
+        row["delta"] = row["billing_arr"] - row["crm_arr"]
     summary = []
     for status in RECON_STATUSES:
         matching = [row for row in rows if row["status"] == status]
@@ -57,17 +64,17 @@ def reconciliation_report(con: duckdb.DuckDBPyConnection, tolerance_usd: float) 
             {
                 "status": status,
                 "accounts": len(matching),
-                "delta": round(sum(row["delta"] for row in matching), 2),
+                "delta": sum(row["delta"] for row in matching),
             }
         )
-    crm_total = round(sum(row["crm_arr"] for row in rows), 2)
-    billing_total = round(sum(row["billing_arr"] for row in rows), 2)
+    crm_total = sum(row["crm_arr"] for row in rows)
+    billing_total = sum(row["billing_arr"] for row in rows)
     return {
         "rows": rows,
         "summary": summary,
         "crm_total": crm_total,
         "billing_total": billing_total,
-        "gap": round(billing_total - crm_total, 2),
+        "gap": billing_total - crm_total,
         "waterfall": waterfall_steps(crm_total, summary, billing_total),
     }
 
