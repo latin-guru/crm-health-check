@@ -106,7 +106,7 @@ GitHub Actions runs ruff, pytest with a 90% coverage floor, and CodeQL. On `main
 - Email and domain normalization are deliberately simple and won't catch every duplicate (for example dotted Gmail addresses).
 - ARR here is contracted recurring value, not revenue recognized by finance. The FX table is fixed demo data.
 
-More detail for managers: [`docs/runbook.md`](docs/runbook.md).
+More detail for managers: [`docs/runbook.md`](docs/runbook.md) (also in Spanish: [`docs/runbook.es.md`](docs/runbook.es.md)).
 
 Bayline Loop also appears in my Integration Launchpad project.
 

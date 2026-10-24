@@ -1,5 +1,7 @@
 # CRM Health Check runbook
 
+*[Leer en español](runbook.es.md)*
+
 A plain-English guide for the sales or marketing manager who owns CRM data quality. It covers what the report shows, how to read it, and how to work the fix lists each week.
 
 > Everything in this repo uses **Bayline Loop**, a fictional company, and generated data. Numbers in the report are sample data.
