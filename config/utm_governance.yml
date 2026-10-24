@@ -1,0 +1,21 @@
+# UTM governance: the only values allowed in utm_source / utm_medium,
+# plus known aliases that map back to a canonical value.
+# Aliases are matched case-insensitively after trimming spaces.
+source:
+  canonical: [google, bing, facebook, linkedin, newsletter, partner, webinar]
+  aliases:
+    google: [google.com, adwords, google ads]
+    bing: [bing.com, microsoft ads]
+    facebook: [fb, facebook.com, meta, instagram]
+    linkedin: [linkedin.com, lnkd, li]
+    newsletter: [email, mailchimp, news-letter]
+    partner: [partners, referral-partner]
+medium:
+  canonical: [cpc, paid_social, email, organic, referral, event]
+  aliases:
+    cpc: [ppc, paid, paidsearch, paid_search]
+    paid_social: [paidsocial, paid-social, social, social_paid]
+    email: [e-mail, newsletter]
+    organic: [seo, organic_search]
+    referral: [ref, partner]
+    event: [webinar, conference]

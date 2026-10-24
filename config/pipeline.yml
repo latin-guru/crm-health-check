@@ -1,0 +1,28 @@
+# Deal pipeline definition. Stage IDs follow HubSpot's default sales pipeline.
+# probability = the share of an open deal's amount counted in the weighted forecast.
+pipeline: default
+stale_days: 30                    # H06: an open deal with no stage change for longer than this is stale
+stages:
+  - id: appointmentscheduled
+    label: Discovery
+    probability: 0.10
+  - id: qualifiedtobuy
+    label: Qualified
+    probability: 0.20
+  - id: presentationscheduled
+    label: Demo
+    probability: 0.40
+  - id: decisionmakerboughtin
+    label: Proposal
+    probability: 0.60
+  - id: contractsent
+    label: Contract sent
+    probability: 0.80
+  - id: closedwon
+    label: Closed won
+    probability: 1.00
+    closed: true
+  - id: closedlost
+    label: Closed lost
+    probability: 0.00
+    closed: true

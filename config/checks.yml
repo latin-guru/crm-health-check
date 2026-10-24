@@ -1,0 +1,113 @@
+# Catalog of data hygiene checks. The logic of each check lives in sql/checks/<sql>.
+# severity: high = breaks reporting or revenue numbers, medium = breaks routing or
+# follow-up, low = breaks attribution detail.
+# params: values from config passed into the SQL as $name.
+checks:
+  - id: H01
+    title: Duplicate contacts
+    object: contact
+    severity: high
+    sql: h01_duplicate_contacts.sql
+    rule: Two or more contacts share the same normalized email (lowercased, trimmed, "+tag" removed).
+    why_it_matters: >-
+      Duplicates split one person's activity across records, so reps call the same
+      buyer twice, emails go out twice, and lead counts look bigger than they are.
+    suggested_fix: >-
+      Review each pair in merge_candidates.csv and merge the newer record into the
+      older one in HubSpot. Merges are never automatic.
+  - id: H02
+    title: Duplicate companies
+    object: company
+    severity: high
+    sql: h02_duplicate_companies.sql
+    rule: Two or more companies share the same normalized domain (lowercased, no http(s)://, no www., no path).
+    why_it_matters: >-
+      Deals and contacts get attached to different copies of the same account, so
+      account revenue, ownership and billing matches are all wrong.
+    suggested_fix: >-
+      Review each pair in merge_candidates.csv, confirm it is the same business (not a
+      sister brand), then merge the newer company into the older one.
+  - id: H03
+    title: Missing or invalid email
+    object: contact
+    severity: medium
+    sql: h03_invalid_email.sql
+    rule: Email is empty or does not look like name@domain.tld.
+    why_it_matters: >-
+      The contact can't receive email, can't be deduplicated, and can't be matched to
+      marketing activity.
+    suggested_fix: >-
+      The record owner looks up the correct email (signature, website, call notes) and
+      updates it. A guessed email is worse than none.
+  - id: H04
+    title: Lifecycle stage missing or wrong
+    object: contact
+    severity: medium
+    sql: h04_lifecycle_stage.sql
+    rule: Lifecycle stage is empty, or it is "customer" but the company has no closed-won deal.
+    why_it_matters: >-
+      Funnel reports count contacts by lifecycle stage. Blank or wrong stages make the
+      lead-to-customer funnel and customer counts unreliable.
+    suggested_fix: >-
+      Blank stages are filled from the company's deals (customer, opportunity or lead).
+      A "customer" with no closed-won deal goes to the owner: either a won deal is
+      missing or the stage is wrong.
+  - id: H05
+    title: Deal missing associations
+    object: deal
+    severity: high
+    sql: h05_deal_associations.sql
+    rule: Deal has no associated company or no primary contact.
+    why_it_matters: >-
+      A deal with no company drops out of account revenue and reconciliation. A deal with
+      no contact can't be attributed to marketing.
+    suggested_fix: >-
+      The deal owner associates the right company and primary contact in HubSpot.
+  - id: H06
+    title: Stale open deal
+    object: deal
+    severity: medium
+    sql: h06_stale_deals.sql
+    params: [as_of, stale_days]
+    rule: Open deal whose close date is in the past, or with no stage change for more than stale_days (config/pipeline.yml).
+    why_it_matters: >-
+      Stale deals inflate the open pipeline and the weighted forecast with money that
+      isn't really coming.
+    suggested_fix: >-
+      The owner either moves the deal forward with a real next step and new close date,
+      or closes it as lost.
+  - id: H07
+    title: Closed-won deal incomplete
+    object: deal
+    severity: high
+    sql: h07_closed_won_incomplete.sql
+    rule: Closed-won deal is missing amount, close date, or term (months).
+    why_it_matters: >-
+      Revenue, ARR and bookings-by-month reports can't count a won deal with no amount,
+      date or term, so the CRM number won't match finance.
+    suggested_fix: >-
+      Copy the missing value from the signed order form or the billing system.
+  - id: H08
+    title: Inactive or missing owner
+    object: any
+    severity: medium
+    sql: h08_owner.sql
+    rule: Record has no owner, or its owner is inactive (left the company) or doesn't exist.
+    why_it_matters: >-
+      Nobody follows up on records owned by someone who left, and owner and team reports
+      hide that work.
+    suggested_fix: >-
+      Contacts and deals move to their company's active owner automatically. Companies
+      need a sales manager to pick a new owner.
+  - id: H09
+    title: Non-canonical UTM value
+    object: contact
+    severity: low
+    sql: h09_utm_governance.sql
+    rule: utm_source or utm_medium is not one of the canonical values in config/utm_governance.yml.
+    why_it_matters: >-
+      "FB", "facebook.com" and "Facebook" show up as three different sources, so
+      attribution reports split one channel into pieces and undercount it.
+    suggested_fix: >-
+      Known aliases are rewritten to the canonical value. Unknown values go to marketing
+      ops to either map or add to the governance list.

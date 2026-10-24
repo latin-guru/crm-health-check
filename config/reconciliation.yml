@@ -1,0 +1,7 @@
+# CRM vs billing reconciliation settings.
+tolerance_usd: 1.00               # differences at or below this are treated as Matched
+# Fixed demo FX table (1 unit of currency = this many USD). Not live rates.
+fx_to_usd:
+  USD: 1.00
+  CAD: 0.73
+  EUR: 1.08

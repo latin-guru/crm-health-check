@@ -1,0 +1,4 @@
+# General report settings.
+company_name: Bayline Loop        # fictional company; all data is generated
+as_of: 2026-09-30                 # the "today" the audit is run against (keeps results reproducible)
+repo_url: https://github.com/latin-guru/crm-health-check
