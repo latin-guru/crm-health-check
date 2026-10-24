@@ -153,4 +153,6 @@ def write_csv(path: Path, rows: list[dict], columns: list[str]) -> None:
         writer = csv.DictWriter(handle, fieldnames=columns, extrasaction="ignore")
         writer.writeheader()
         for row in rows:
-            writer.writerow({key: ("" if row.get(key) is None else row.get(key)) for key in columns})
+            writer.writerow(
+                {key: ("" if row.get(key) is None else row.get(key)) for key in columns}
+            )

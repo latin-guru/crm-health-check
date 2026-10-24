@@ -10,8 +10,10 @@ from chc.db import connect, load_csv_dir
 from chc.generate import generate as generate_data
 from chc.paths import DEFAULT_DATA_DIR, DEFAULT_SITE_DIR
 
-app = typer.Typer(help="CRM Health Check: audit a HubSpot-style CRM export (fictional data).",
-                  no_args_is_help=True)
+app = typer.Typer(
+    help="CRM Health Check: audit a HubSpot-style CRM export (fictional data).",
+    no_args_is_help=True,
+)
 
 
 @app.command()

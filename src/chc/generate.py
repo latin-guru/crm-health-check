@@ -32,10 +32,38 @@ OWNERS = [
 ]
 
 NAME_PREFIXES = [
-    "Harbor", "Maple", "Copper", "Tidal", "Willow", "Ember", "Summit", "Lumen", "Cedar",
-    "Saffron", "Indigo", "Pebble", "Bramble", "Marigold", "Orchard", "Driftwood", "Sable",
-    "Wren", "Clover", "Basil", "Quarry", "Fable", "Hearth", "Northbeam", "Larkspur", "Kestrel",
-    "Moonrise", "Riverstone", "Goldfinch", "Thistle", "Alder", "Brightwater",
+    "Harbor",
+    "Maple",
+    "Copper",
+    "Tidal",
+    "Willow",
+    "Ember",
+    "Summit",
+    "Lumen",
+    "Cedar",
+    "Saffron",
+    "Indigo",
+    "Pebble",
+    "Bramble",
+    "Marigold",
+    "Orchard",
+    "Driftwood",
+    "Sable",
+    "Wren",
+    "Clover",
+    "Basil",
+    "Quarry",
+    "Fable",
+    "Hearth",
+    "Northbeam",
+    "Larkspur",
+    "Kestrel",
+    "Moonrise",
+    "Riverstone",
+    "Goldfinch",
+    "Thistle",
+    "Alder",
+    "Brightwater",
 ]
 
 # industry -> words used to finish a company name
@@ -49,20 +77,73 @@ INDUSTRIES = {
 }
 
 FIRST_NAMES = [
-    "Ana", "Ben", "Chloe", "Dev", "Erin", "Felix", "Grace", "Hugo", "Iris", "Jon", "Kai",
-    "Lena", "Mateo", "Nora", "Omar", "Paula", "Quinn", "Rosa", "Sean", "Tara", "Uma", "Vince",
-    "Wendy", "Xavi", "Yara", "Zane", "Alma", "Bruno", "Carla", "Dario", "Elsa", "Gabe",
+    "Ana",
+    "Ben",
+    "Chloe",
+    "Dev",
+    "Erin",
+    "Felix",
+    "Grace",
+    "Hugo",
+    "Iris",
+    "Jon",
+    "Kai",
+    "Lena",
+    "Mateo",
+    "Nora",
+    "Omar",
+    "Paula",
+    "Quinn",
+    "Rosa",
+    "Sean",
+    "Tara",
+    "Uma",
+    "Vince",
+    "Wendy",
+    "Xavi",
+    "Yara",
+    "Zane",
+    "Alma",
+    "Bruno",
+    "Carla",
+    "Dario",
+    "Elsa",
+    "Gabe",
 ]
 LAST_NAMES = [
-    "Ruiz", "Kim", "Patel", "Novak", "Silva", "Moreau", "Okafor", "Lindqvist", "Haddad",
-    "Tanaka", "Byrne", "Costa", "Fischer", "Mendez", "Osei", "Varga", "Walsh", "Yilmaz",
-    "Abbott", "Duarte", "Ferreira", "Gallo", "Ibarra", "Jensen",
+    "Ruiz",
+    "Kim",
+    "Patel",
+    "Novak",
+    "Silva",
+    "Moreau",
+    "Okafor",
+    "Lindqvist",
+    "Haddad",
+    "Tanaka",
+    "Byrne",
+    "Costa",
+    "Fischer",
+    "Mendez",
+    "Osei",
+    "Varga",
+    "Walsh",
+    "Yilmaz",
+    "Abbott",
+    "Duarte",
+    "Ferreira",
+    "Gallo",
+    "Ibarra",
+    "Jensen",
 ]
 
 # Plans: monthly list price per storefront. Mid-Market buys bigger plans.
 PLANS = {"Launch": 199, "Growth": 499, "Scale": 1200}
-TEAM_PLANS = {"SMB": ["Launch", "Growth"], "Mid-Market": ["Growth", "Scale"],
-              "Partners": ["Launch", "Growth", "Scale"]}
+TEAM_PLANS = {
+    "SMB": ["Launch", "Growth"],
+    "Mid-Market": ["Growth", "Scale"],
+    "Partners": ["Launch", "Growth", "Scale"],
+}
 
 # HubSpot "original source" -> the canonical UTM pair a clean contact carries.
 SOURCE_UTMS = {
@@ -74,11 +155,20 @@ SOURCE_UTMS = {
     "ORGANIC_SEARCH": [(None, None)],
     "DIRECT_TRAFFIC": [(None, None)],
 }
-CAMPAIGNS = ["q1-affiliate-launch", "creator-program-webinar", "spring-ecom-guide",
-             "partner-roi-calculator", "holiday-readiness"]
+CAMPAIGNS = [
+    "q1-affiliate-launch",
+    "creator-program-webinar",
+    "spring-ecom-guide",
+    "partner-roi-calculator",
+    "holiday-readiness",
+]
 CHANNEL_FOR_SOURCE = {
-    "PAID_SEARCH": "paid_search", "PAID_SOCIAL": "paid_social", "EMAIL_MARKETING": "email",
-    "REFERRALS": "referral", "OFFLINE": "event", "ORGANIC_SEARCH": "organic_search",
+    "PAID_SEARCH": "paid_search",
+    "PAID_SOCIAL": "paid_social",
+    "EMAIL_MARKETING": "email",
+    "REFERRALS": "referral",
+    "OFFLINE": "event",
+    "ORGANIC_SEARCH": "organic_search",
     "DIRECT_TRAFFIC": "direct",
 }
 
@@ -92,21 +182,43 @@ MESSY_SOURCES = {
     "partner": ["Partners", "referral-partner"],
     "webinar": ["Webinar"],
 }
-MESSY_MEDIUMS = {"cpc": ["CPC", "ppc"], "paid_social": ["paidsocial", "Paid-Social"],
-                 "email": ["e-mail", "Email"], "referral": ["ref"], "event": ["Event"]}
+MESSY_MEDIUMS = {
+    "cpc": ["CPC", "ppc"],
+    "paid_social": ["paidsocial", "Paid-Social"],
+    "email": ["e-mail", "Email"],
+    "referral": ["ref"],
+    "event": ["Event"],
+}
 UNKNOWN_SOURCES = ["tiktok-test", "summer_launch", "influencer_x", "qr-code"]
 
-OPEN_STAGES = ["appointmentscheduled", "qualifiedtobuy", "presentationscheduled",
-               "decisionmakerboughtin", "contractsent"]
+OPEN_STAGES = [
+    "appointmentscheduled",
+    "qualifiedtobuy",
+    "presentationscheduled",
+    "decisionmakerboughtin",
+    "contractsent",
+]
 OPEN_STAGE_WEIGHTS = [30, 25, 20, 15, 10]
 
 # How many of each defect to plant. Kept small so every one can be checked by hand.
 DEFECT_COUNTS = {
-    "H01": 12, "H02": 6, "H03_missing": 4, "H03_invalid": 6, "H04_missing": 5,
-    "H04_customer": 5, "H05_company": 4, "H05_contact": 4, "H06_close": 5, "H06_idle": 5,
+    "H01": 12,
+    "H02": 6,
+    "H03_missing": 4,
+    "H03_invalid": 6,
+    "H04_missing": 5,
+    "H04_customer": 5,
+    "H05_company": 4,
+    "H05_contact": 4,
+    "H06_close": 5,
+    "H06_idle": 5,
     "H07": 3,  # per missing field (amount, close_date, term_months)
-    "H08_contact": 3, "H08_deal_inactive": 2, "H08_deal_none": 2, "H08_company": 2,
-    "H09_alias": 8, "H09_unknown": 4,
+    "H08_contact": 3,
+    "H08_deal_inactive": 2,
+    "H08_deal_none": 2,
+    "H08_company": 2,
+    "H09_alias": 8,
+    "H09_unknown": 4,
 }
 
 
@@ -125,8 +237,14 @@ def slug(text: str) -> str:
     return "".join(ch for ch in text.lower() if ch.isalnum())
 
 
-def pick_clean(rng: random.Random, pool: list[dict], key: str, used: set, count: int,
-               condition=lambda record: True) -> list[dict]:
+def pick_clean(
+    rng: random.Random,
+    pool: list[dict],
+    key: str,
+    used: set,
+    count: int,
+    condition=lambda record: True,
+) -> list[dict]:
     """Pick `count` records that no other defect has touched yet, and mark them used."""
     candidates = [r for r in pool if r[key] not in used and condition(r)]
     chosen = rng.sample(candidates, count)
@@ -151,8 +269,12 @@ def build_companies(rng: random.Random, as_of: date, count: int) -> list[dict]:
         if active:
             active_by_team.setdefault(team, []).append(owner_id)
 
-    names = [(p, industry, word) for p in NAME_PREFIXES
-             for industry, words in INDUSTRIES.items() for word in words]
+    names = [
+        (p, industry, word)
+        for p in NAME_PREFIXES
+        for industry, words in INDUSTRIES.items()
+        for word in words
+    ]
     rng.shuffle(names)
     companies = []
     for number, (prefix, industry, word) in enumerate(names[:count], start=1):
@@ -221,8 +343,12 @@ def build_deal(rng, number, company, contacts, final_stage, last_change, close_d
         times.insert(0, times[0] - gap)
     deal_id = f"DL-{number:04d}"
     history = [
-        {"deal_id": deal_id, "from_stage": path[i - 1] if i else None, "to_stage": stage,
-         "changed_at": times[i]}
+        {
+            "deal_id": deal_id,
+            "from_stage": path[i - 1] if i else None,
+            "to_stage": stage,
+            "changed_at": times[i],
+        }
         for i, stage in enumerate(path)
     ]
     term = rng.choice([12, 12, 12, 24, 36])
@@ -266,8 +392,15 @@ def build_deals(rng: random.Random, companies: list[dict], contacts: list[dict],
         else:
             last_change = at(as_of - timedelta(days=rng.randint(1, 25)), rng)
             close_date = as_of + timedelta(days=rng.randint(10, 120))
-        deal, rows = build_deal(rng, number, company, contacts_by_company[company["company_id"]],
-                                stage, last_change, close_date)
+        deal, rows = build_deal(
+            rng,
+            number,
+            company,
+            contacts_by_company[company["company_id"]],
+            stage,
+            last_change,
+            close_date,
+        )
         deals.append(deal)
         history.extend(rows)
     return deals, history
@@ -283,7 +416,9 @@ def set_lifecycle_stages(rng: random.Random, contacts: list[dict], deals: list[d
         elif contact["company_id"] in open_:
             contact["lifecycle_stage"] = "opportunity"
         else:
-            contact["lifecycle_stage"] = rng.choice(["subscriber", "lead", "marketingqualifiedlead"])
+            contact["lifecycle_stage"] = rng.choice(
+                ["subscriber", "lead", "marketingqualifiedlead"]
+            )
 
 
 def messy_domain(rng: random.Random, domain: str) -> str:
@@ -327,8 +462,9 @@ def build_touchpoints(rng, contacts, deals, as_of):
     About a quarter of touches carry messy UTM spellings, the way real tracking data does,
     so the attribution page can show the before/after effect of UTM normalization.
     """
-    won_contact_start = {d["primary_contact_id"]: d["created_at"] for d in deals
-                         if d["stage"] == "closedwon"}
+    won_contact_start = {
+        d["primary_contact_id"]: d["created_at"] for d in deals if d["stage"] == "closedwon"
+    }
     touchpoints = []
     for contact in contacts:
         deal_start = won_contact_start.get(contact["contact_id"])
@@ -346,7 +482,8 @@ def build_touchpoints(rng, contacts, deals, as_of):
                 {
                     "touchpoint_id": f"TP-{len(touchpoints) + 1:05d}",
                     "contact_id": contact["contact_id"],
-                    "occurred_at": latest - timedelta(days=rng.randint(1, 90), hours=rng.randint(0, 9)),
+                    "occurred_at": latest
+                    - timedelta(days=rng.randint(1, 90), hours=rng.randint(0, 9)),
                     "channel": CHANNEL_FOR_SOURCE[source],
                     "utm_source": utm_source,
                     "utm_medium": utm_medium,
@@ -375,20 +512,28 @@ def plant_hygiene_defects(rng, data, as_of) -> list[dict]:
     # H01: copy a contact with a different spelling of the same email.
     for original in pick_clean(rng, contacts, "contact_id", used_contacts, n["H01"]):
         local, domain = original["email"].split("@")
-        variant = rng.choice([original["email"].upper(), f"{local}+promo@{domain}",
-                              f"{local.title()}@{domain}"])
-        duplicate = {**original, "contact_id": f"CT-{len(contacts) + 1:05d}", "email": variant,
-                     "created_at": original["created_at"] + timedelta(days=rng.randint(30, 300))}
+        variant = rng.choice(
+            [original["email"].upper(), f"{local}+promo@{domain}", f"{local.title()}@{domain}"]
+        )
+        duplicate = {
+            **original,
+            "contact_id": f"CT-{len(contacts) + 1:05d}",
+            "email": variant,
+            "created_at": original["created_at"] + timedelta(days=rng.randint(30, 300)),
+        }
         contacts.append(duplicate)
         used_contacts.add(duplicate["contact_id"])
         record("H01", duplicate["contact_id"], f"duplicate of {original['contact_id']}")
 
     # H02: copy a company with a differently formatted domain (no contacts or deals).
     for original in pick_clean(rng, companies, "company_id", used_companies, n["H02"]):
-        duplicate = {**original, "company_id": f"CO-{len(companies) + 1:04d}",
-                     "name": original["name"] + rng.choice(["", " Inc.", " LLC"]),
-                     "domain": messy_domain(rng, original["domain"]),
-                     "created_at": original["created_at"] + timedelta(days=rng.randint(30, 300))}
+        duplicate = {
+            **original,
+            "company_id": f"CO-{len(companies) + 1:04d}",
+            "name": original["name"] + rng.choice(["", " Inc.", " LLC"]),
+            "domain": messy_domain(rng, original["domain"]),
+            "created_at": original["created_at"] + timedelta(days=rng.randint(30, 300)),
+        }
         companies.append(duplicate)
         record("H02", duplicate["company_id"], f"duplicate of {original['company_id']}")
 
@@ -398,9 +543,15 @@ def plant_hygiene_defects(rng, data, as_of) -> list[dict]:
         record("H03", contact["contact_id"], "email missing")
     for contact in pick_clean(rng, contacts, "contact_id", used_contacts, n["H03_invalid"]):
         local, domain = contact["email"].split("@")
-        contact["email"] = rng.choice([f"{local}@", f"{local}.{domain}", f"{local}@@{domain}",
-                                       f"{local}@{domain.split('.')[0]}",
-                                       f"{contact['first_name']} {contact['last_name']}@{domain}"])
+        contact["email"] = rng.choice(
+            [
+                f"{local}@",
+                f"{local}.{domain}",
+                f"{local}@@{domain}",
+                f"{local}@{domain.split('.')[0]}",
+                f"{contact['first_name']} {contact['last_name']}@{domain}",
+            ]
+        )
         record("H03", contact["contact_id"], "email malformed")
 
     # H04: blank lifecycle stage, and "customer" at a company with no won deal.
@@ -408,8 +559,14 @@ def plant_hygiene_defects(rng, data, as_of) -> list[dict]:
     for contact in pick_clean(rng, contacts, "contact_id", used_contacts, n["H04_missing"]):
         contact["lifecycle_stage"] = None
         record("H04", contact["contact_id"], "lifecycle stage missing")
-    for contact in pick_clean(rng, contacts, "contact_id", used_contacts, n["H04_customer"],
-                              lambda c: c["company_id"] not in won_companies):
+    for contact in pick_clean(
+        rng,
+        contacts,
+        "contact_id",
+        used_contacts,
+        n["H04_customer"],
+        lambda c: c["company_id"] not in won_companies,
+    ):
         contact["lifecycle_stage"] = "customer"
         record("H04", contact["contact_id"], "customer with no closed-won deal")
 
@@ -440,7 +597,9 @@ def plant_hygiene_defects(rng, data, as_of) -> list[dict]:
     # because a missing term is read as 12 months, so ARR still matches billing).
     won = [d for d in deals if d["stage"] == "closedwon" and d["deal_id"] not in data["_recon"]]
     for field in ("amount", "close_date", "term_months"):
-        condition = (lambda d: d["term_months"] == 12) if field == "term_months" else (lambda d: True)
+        condition = (
+            (lambda d: d["term_months"] == 12) if field == "term_months" else (lambda d: True)
+        )
         for deal in pick_clean(rng, won, "deal_id", used_deals, n["H07"], condition):
             deal[field] = None
             record("H07", deal["deal_id"], f"closed-won deal missing {field}")
@@ -491,8 +650,13 @@ def plant_recon_defects(rng, data, as_of) -> None:
     expected = data["_recon_expected"]
 
     def expect(deal, status, description):
-        expected.append({"domain": companies[deal["company_id"]]["domain"],
-                         "expected_status": status, "description": description})
+        expected.append(
+            {
+                "domain": companies[deal["company_id"]]["domain"],
+                "expected_status": status,
+                "description": description,
+            }
+        )
 
     # CRM-only: billing has no active subscription.
     for deal in chosen[0:2]:
@@ -528,16 +692,33 @@ def plant_recon_defects(rng, data, as_of) -> None:
         expect(deal, "Currency mismatch", f"deal {deal['currency']}, billing {sub['currency']}")
 
     # Billing-only: active subscriptions with no closed-won deal in CRM.
-    lost_company = companies[next(d["company_id"] for d in data["deals"]
-                                  if d["stage"] == "closedlost")]
+    lost_company = companies[
+        next(d["company_id"] for d in data["deals"] if d["stage"] == "closedlost")
+    ]
     new_domains = ["self-serve-brand-one.example", "popupshop-two.example"]
     for number, domain in enumerate([lost_company["domain"], *new_domains], start=1):
-        subs.append({"subscription_id": f"sub_9{number:03d}", "billing_customer_id": f"cus_9{number:03d}",
-                     "company_domain": domain, "plan": "Launch", "mrr": 199.0, "currency": "USD",
-                     "interval": "month", "status": "active",
-                     "started_at": as_of - timedelta(days=60), "canceled_at": None, "_deal_id": None})
-        expected.append({"domain": domain, "expected_status": "Billing-only",
-                         "description": "active subscription with no closed-won deal"})
+        subs.append(
+            {
+                "subscription_id": f"sub_9{number:03d}",
+                "billing_customer_id": f"cus_9{number:03d}",
+                "company_domain": domain,
+                "plan": "Launch",
+                "mrr": 199.0,
+                "currency": "USD",
+                "interval": "month",
+                "status": "active",
+                "started_at": as_of - timedelta(days=60),
+                "canceled_at": None,
+                "_deal_id": None,
+            }
+        )
+        expected.append(
+            {
+                "domain": domain,
+                "expected_status": "Billing-only",
+                "description": "active subscription with no closed-won deal",
+            }
+        )
     # chosen[14:17] stay clean on purpose: spare matched accounts.
 
 
@@ -574,9 +755,13 @@ def generate(seed: int, out_dir: Path, settings: dict) -> dict:
     by_id = {c["company_id"]: c for c in companies}
     for deal in deals:
         if deal["deal_id"] in data["_recon_expected_extra"]:
-            data["_recon_expected"].append({"domain": by_id[deal["company_id"]]["domain"],
-                                            "expected_status": "Amount mismatch",
-                                            "description": "closed-won deal missing amount (H07)"})
+            data["_recon_expected"].append(
+                {
+                    "domain": by_id[deal["company_id"]]["domain"],
+                    "expected_status": "Amount mismatch",
+                    "description": "closed-won deal missing amount (H07)",
+                }
+            )
 
     out_dir = Path(out_dir)
     for table, columns in SCHEMA.items():
@@ -590,8 +775,9 @@ def generate(seed: int, out_dir: Path, settings: dict) -> dict:
         "defects": sorted(defects, key=lambda d: (d["check_id"], d["record_id"])),
         "reconciliation": sorted(data["_recon_expected"], key=lambda r: r["domain"]),
     }
-    (out_dir / "defects_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n",
-                                                   encoding="utf-8")
+    (out_dir / "defects_manifest.json").write_text(
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
+    )
     return manifest
 
 

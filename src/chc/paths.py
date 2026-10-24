@@ -1,4 +1,4 @@
-"""Where the repo's folders live, so every module finds sql/, config/ and templates/ the same way."""
+"""Where the repo folders live, so every module finds sql/, config/ and templates/ the same way."""
 
 from pathlib import Path
 

@@ -104,3 +104,23 @@ def make_db(settings):
         return con
 
     return build
+
+
+@pytest.fixture(scope="session")
+def generated(tmp_path_factory, settings):
+    """Generate the seed-42 demo data once and return (data_dir, manifest)."""
+    from chc.generate import generate
+
+    data_dir = tmp_path_factory.mktemp("data")
+    manifest = generate(42, data_dir, settings)
+    return data_dir, manifest
+
+
+@pytest.fixture(scope="session")
+def generated_db(generated, settings):
+    """A connection loaded with the generated CSVs."""
+    from chc.db import load_csv_dir
+
+    con = connect(settings)
+    load_csv_dir(con, generated[0])
+    return con
