@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "_macros.html" import metric, chart, sql_link %}
+{% block content %}
+<h1>Pipeline &amp; Forecast</h1>
+<p class="lede">Open pipeline by stage, owner and team, and a weighted forecast using the stage probabilities in <code>config/pipeline.yml</code>. Amounts are converted to USD with the demo FX table.</p>
+
+<div class="grid cards">
+  {% call metric("open-pipeline", "Open pipeline", report.pipeline.open_deals ~ " open deals") %}
+  <div class="metric-value">{{ report.pipeline.total_open_usd | money }}</div>
+  {% endcall %}
+  {% call metric("weighted-forecast", "Weighted forecast", "Sum of amount x stage probability") %}
+  <div class="metric-value">{{ report.pipeline.total_weighted_usd | money }}</div>
+  {% endcall %}
+</div>
+
+<div class="grid two" style="margin-top:16px">
+  {% call metric("stage-funnel", "Open pipeline by stage", "Stale deals (H06) are still included here; fixing them lowers these numbers.") %}
+  {{ chart("stage-funnel", charts["stage-funnel"], "Horizontal bar chart of open and weighted amount by stage; values in the table below") }}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Stage</th><th class="num">Probability</th><th class="num">Deals</th><th class="num">Amount</th><th class="num">Weighted</th></tr></thead>
+    <tbody>
+    {% for row in report.pipeline.by_stage %}
+      <tr><td>{{ row.stage }}</td><td class="num">{{ (row.probability * 100) | round | int }}%</td><td class="num">{{ row.deals }}</td><td class="num">{{ row.amount_usd | money }}</td><td class="num">{{ row.weighted_usd | money }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endcall %}
+
+  {% call metric("forecast-team", "Weighted forecast by team", "Team comes from the deal owner; deals with no owner show as Unassigned.") %}
+  {{ chart("forecast-team", charts["forecast-team"], "Bar chart of open amount and weighted forecast by team; values in the table below") }}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Team</th><th class="num">Deals</th><th class="num">Open amount</th><th class="num">Weighted</th></tr></thead>
+    <tbody>
+    {% for row in report.pipeline.by_team %}
+      <tr><td>{{ row.team }}</td><td class="num">{{ row.deals }}</td><td class="num">{{ row.amount_usd | money }}</td><td class="num">{{ row.weighted_usd | money }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endcall %}
+
+  {% call metric("stage-conversion", "Stage-to-stage conversion", "Share of deals that reached a stage and then reached the next one. Includes deals still open.") %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>From</th><th>To</th><th class="num">Reached</th><th class="num">Moved on</th><th class="num">Conversion</th></tr></thead>
+    <tbody>
+    {% for row in report.pipeline.conversion %}
+      <tr><td>{{ row.stage }}</td><td>{{ row.next_stage }}</td><td class="num">{{ row.deals_reached }}</td><td class="num">{{ row.next_reached }}</td><td class="num">{{ row.conversion_pct }}%</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endcall %}
+
+  {% call metric("days-in-stage", "Average days in stage", "Only completed visits count: a deal still in a stage isn't measured yet.") %}
+  {{ chart("days-in-stage", charts["days-in-stage"], "Bar chart of average days spent in each open stage; values in the table below") }}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Stage</th><th class="num">Completed visits</th><th class="num">Average days</th></tr></thead>
+    <tbody>
+    {% for row in report.pipeline.days_in_stage %}
+      <tr><td>{{ row.stage }}</td><td class="num">{{ row.completed_visits }}</td><td class="num">{{ row.avg_days }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endcall %}
+</div>
+
+<h2>Open pipeline by owner</h2>
+{% call metric("pipeline-owner", "Open pipeline by owner", "Inactive owners are flagged so their deals can be reassigned (H08).") %}
+<div class="table-wrap"><table>
+  <thead><tr><th>Owner</th><th>Team</th><th>Status</th><th class="num">Deals</th><th class="num">Open amount</th><th class="num">Weighted</th></tr></thead>
+  <tbody>
+  {% for row in report.pipeline.by_owner %}
+    <tr><td>{{ row.owner }}</td><td>{{ row.team }}</td><td>{{ "Active" if row.active else "Inactive / none" }}</td><td class="num">{{ row.deals }}</td><td class="num">{{ row.amount_usd | money }}</td><td class="num">{{ row.weighted_usd | money }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endcall %}
+<p class="metric-note">SQL: {{ sql_link(sql_url, "pipeline/open_pipeline_by_stage.sql") }}, {{ sql_link(sql_url, "pipeline/forecast_by_team.sql") }}, {{ sql_link(sql_url, "pipeline/stage_conversion.sql") }}, {{ sql_link(sql_url, "pipeline/days_in_stage.sql") }}, {{ sql_link(sql_url, "pipeline/open_pipeline_by_owner.sql") }}</p>
+{% endblock %}

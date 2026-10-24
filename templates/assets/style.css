@@ -1,0 +1,143 @@
+/* CRM Health Check report styles. Colors are tokens so dark mode swaps them in one place. */
+:root {
+  color-scheme: light;
+  --bg: #f4f4f1;
+  --surface: #fcfcfb;
+  --border: #e2e1dc;
+  --text: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #6d6c67;
+  --accent: #1c5cab;
+  --accent-soft: #e6effa;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --status-high: #d03b3b;
+  --status-medium: #ec835a;
+  --status-low: #fab219;
+  --status-good: #0ca30c;
+  --waterfall-increase: #2a78d6;
+  --waterfall-decrease: #e34948;
+  --waterfall-total: #6d6c67;
+  --grid: #e9e8e3;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1a1a19;
+    --border: #2f2f2c;
+    --text: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #9a998f;
+    --accent: #86b6ef;
+    --accent-soft: #1d2a3a;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --waterfall-increase: #3987e5;
+    --waterfall-decrease: #e66767;
+    --waterfall-total: #8a897f;
+    --grid: #2a2a27;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211;
+  --surface: #1a1a19;
+  --border: #2f2f2c;
+  --text: #f0efec;
+  --text-secondary: #c3c2b7;
+  --text-muted: #9a998f;
+  --accent: #86b6ef;
+  --accent-soft: #1d2a3a;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --waterfall-increase: #3987e5;
+  --waterfall-decrease: #e66767;
+  --waterfall-total: #8a897f;
+  --grid: #2a2a27;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+a { color: var(--accent); }
+code { font: 0.9em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.site-header { background: var(--surface); border-bottom: 1px solid var(--border); }
+.header-inner, main, .site-footer { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+.header-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding-top: 14px; }
+.brand { font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; }
+.brand-sub { color: var(--text-secondary); font-size: 13px; }
+nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 2px; margin: 10px 0 0; padding: 0; }
+nav a {
+  display: block; padding: 8px 12px; color: var(--text-secondary); text-decoration: none;
+  border-bottom: 2px solid transparent; font-size: 14px;
+}
+nav a:hover { color: var(--text); }
+nav a[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+
+.notice {
+  margin: 20px 0 0; padding: 10px 14px; border-radius: var(--radius);
+  background: var(--accent-soft); color: var(--text); font-size: 14px;
+}
+h1 { font-size: 26px; margin: 22px 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 19px; margin: 32px 0 10px; }
+h3 { font-size: 16px; margin: 0 0 6px; }
+.lede { color: var(--text-secondary); margin: 0 0 18px; max-width: 760px; }
+
+.grid { display: grid; gap: 16px; }
+.grid.cards { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); }
+
+.metric {
+  margin: 0; padding: 16px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); min-width: 0;
+}
+.metric figcaption { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.metric-title { font-weight: 600; font-size: 14px; color: var(--text-secondary); }
+.sample-badge {
+  flex: none; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase;
+  color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px;
+}
+.metric-value { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.metric-note { margin: 6px 0 0; color: var(--text-muted); font-size: 13px; }
+.chart-box { position: relative; height: 300px; }
+.chart-box.tall { height: 420px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tbody tr:hover { background: var(--accent-soft); }
+
+.severity { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; }
+.severity::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--dot); }
+.severity.high { --dot: var(--status-high); }
+.severity.medium { --dot: var(--status-medium); }
+.severity.low { --dot: var(--status-low); }
+.status-pill { white-space: nowrap; font-weight: 600; }
+
+.check { padding: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin: 16px 0; scroll-margin-top: 12px; }
+.check-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 8px; }
+.check dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0 12px; }
+.check dt { color: var(--text-muted); font-size: 13px; }
+.check dd { margin: 0; }
+details summary { cursor: pointer; color: var(--accent); font-weight: 600; margin: 8px 0; }
+
+.fix-list { margin: 0; padding-left: 20px; }
+.fix-list li { margin: 0 0 10px; }
+.button {
+  display: inline-block; padding: 9px 16px; border-radius: 8px; background: var(--accent); color: var(--surface);
+  text-decoration: none; font-weight: 600; font-size: 14px;
+}
+.downloads { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.download { padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.download p { color: var(--text-secondary); font-size: 14px; }
+
+.site-footer { color: var(--text-muted); font-size: 13px; padding-top: 32px; padding-bottom: 32px; }

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import metric, chart, sql_link %}
+{% block content %}
+<h1>Attribution</h1>
+<p class="lede">Which marketing source gets credit for closed-won deals? First touch credits the earliest tracked touch of the deal's primary contact; last touch credits the latest touch before the deal was created. The same touches are shown before and after UTM normalization.</p>
+
+<div class="grid cards">
+  {% call metric("sources-before", "Distinct sources before normalization") %}
+  <div class="metric-value">{{ report.attribution.distinct_before }}</div>
+  {% endcall %}
+  {% call metric("sources-after", "Distinct sources after normalization", "Unknown values stay visible as (unmapped)") %}
+  <div class="metric-value">{{ report.attribution.distinct_after }}</div>
+  {% endcall %}
+  {% call metric("attributed-deals", "Closed-won deals with tracked touches") %}
+  <div class="metric-value">{{ report.attribution.deals }}</div>
+  {% endcall %}
+</div>
+
+<div class="grid two" style="margin-top:16px">
+  {% for view, title in [("before", "Before UTM normalization"), ("after", "After UTM normalization")] %}
+  {% call metric("attribution-" ~ view, title, "Won deals credited per source") %}
+  {{ chart("attribution-" ~ view, charts["attribution-" ~ view], "Horizontal bar chart of first-touch and last-touch deals per source, " ~ title ~ "; values in the table below", tall=True) }}
+  <details>
+    <summary>Show table</summary>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Source</th><th class="num">First touch</th><th class="num">Last touch</th></tr></thead>
+      <tbody>
+      {% for row in report.attribution[view] %}
+        <tr><td>{{ row.source }}</td><td class="num">{{ row.first_touch_deals }}</td><td class="num">{{ row.last_touch_deals }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </details>
+  {% endcall %}
+  {% endfor %}
+</div>
+
+<h2>Reading this</h2>
+<p class="lede">Before normalization, "Webinar", "Newsletter" and "google.com" each look like their own channel, so the real channels are undercounted. After mapping aliases with <code>config/utm_governance.yml</code>, each channel is counted once. Multi-touch models (linear, time-decay, W-shaped) would split credit across every touch instead of giving it all to one; this demo keeps the two simplest models so the effect of clean UTMs is easy to see.</p>
+<p class="metric-note">SQL: {{ sql_link(sql_url, "attribution/first_last_touch.sql") }}</p>
+{% endblock %}

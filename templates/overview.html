@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_macros.html" import metric, chart, severity %}
+{% block content %}
+<h1>Overview</h1>
+<p class="lede">Can leadership trust the CRM? This page shows how much of it passes every hygiene check, where the problems are, and what to fix first.</p>
+
+<div class="grid cards">
+  {% for score in report.scores %}
+  {% call metric("health-" ~ score.object, "Health score: " ~ score.label, score.flagged ~ " of " ~ score.total ~ " records have at least one issue") %}
+  <div class="metric-value">{{ score.score }}%</div>
+  {% endcall %}
+  {% endfor %}
+  {% call metric("recon-gap", "Billing ARR minus CRM ARR", "See Reconciliation for why") %}
+  <div class="metric-value">{{ report.recon.gap | money }}</div>
+  {% endcall %}
+</div>
+<p class="metric-note">Health score = share of records that pass all checks that apply to them.</p>
+
+<div class="grid two">
+  {% call metric("issues-by-severity", "Issues by severity", report.issues | length ~ " issues in total") %}
+  {{ chart("severity", charts["severity"], "Bar chart of issue counts: " ~ report.severity.high ~ " high, " ~ report.severity.medium ~ " medium, " ~ report.severity.low ~ " low") }}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Severity</th><th class="num">Issues</th></tr></thead>
+    <tbody>
+    {% for level, count in report.severity.items() %}
+      <tr><td>{{ severity(level) }}</td><td class="num">{{ count }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endcall %}
+
+  {% call metric("top-fixes", "Top 5 fixes", "Ranked by severity, then by number of issues") %}
+  <ol class="fix-list">
+    {% for check in report.top_fixes %}
+    <li><a href="data-health.html#{{ check.id }}"><strong>{{ check.id }} {{ check.title }}</strong></a> · {{ severity(check.severity) }} · {{ check.issue_count }} issues<br>{{ check.suggested_fix }}</li>
+    {% endfor %}
+  </ol>
+  {% endcall %}
+</div>
+{% endblock %}

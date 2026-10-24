@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_macros.html" import metric %}
+{% block content %}
+<h1>Fix List</h1>
+<p class="lede">Every issue lands in exactly one list. Safe, rule-based fixes are ready to import; anything that needs judgment goes to a person.</p>
+
+<div class="downloads">
+  <div class="download">
+    {% call metric("fix-count", "fixes.csv", "HubSpot import format: Record ID, Object, Property, New Value") %}
+    <div class="metric-value">{{ report.fix_counts.fixes }}</div>
+    {% endcall %}
+    <p>Auto-fixable issues only: blank lifecycle stages, owners that left, and UTM aliases. Import one object at a time.</p>
+    <a class="button" href="downloads/fixes.csv" download>Download fixes.csv</a>
+  </div>
+  <div class="download">
+    {% call metric("merge-count", "merge_candidates.csv", "Duplicate contacts (H01) and companies (H02)") %}
+    <div class="metric-value">{{ report.fix_counts.merge_candidates }}</div>
+    {% endcall %}
+    <p>Each row pairs a duplicate with the older record to keep. A person reviews every pair.</p>
+    <a class="button" href="downloads/merge_candidates.csv" download>Download merge_candidates.csv</a>
+  </div>
+  <div class="download">
+    {% call metric("review-count", "needs_owner_review.csv", "Issues only the record owner can fix") %}
+    <div class="metric-value">{{ report.fix_counts.needs_owner_review }}</div>
+    {% endcall %}
+    <p>Missing emails, stale deals, missing associations and amounts, unknown UTM values.</p>
+    <a class="button" href="downloads/needs_owner_review.csv" download>Download needs_owner_review.csv</a>
+  </div>
+</div>
+
+<h2>Why merges are never automatic</h2>
+<p class="lede">A merge in HubSpot combines two records' history and can't be cleanly undone. Two records with the same email domain can be two different brands under one parent company, and two contacts can share a team inbox. A wrong merge loses data and attaches deals to the wrong customer, so the tool only suggests pairs and a person decides.</p>
+
+<h2>Preview: fixes.csv</h2>
+{% call metric("fix-preview", "First 10 rows of fixes.csv") %}
+<div class="table-wrap"><table>
+  <thead><tr><th>Record ID</th><th>Object</th><th>Property</th><th>New Value</th></tr></thead>
+  <tbody>
+  {% for row in report.fix_lists.fixes[:10] %}
+    <tr><td><code>{{ row["Record ID"] }}</code></td><td>{{ row["Object"] }}</td><td><code>{{ row["Property"] }}</code></td><td>{{ row["New Value"] }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endcall %}
+
+<p class="metric-note">Also available: <a href="downloads/issues.csv" download>issues.csv</a> (every issue) and <a href="downloads/reconciliation.csv" download>reconciliation.csv</a>.</p>
+{% endblock %}

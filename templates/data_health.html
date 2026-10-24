@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_macros.html" import metric, severity, sql_link %}
+{% block content %}
+<h1>Data Health</h1>
+<p class="lede">Nine checks, each with a plain-English reason and a fix. Click a check to see the records it flagged.</p>
+
+{% call metric("checks-table", "Checks", "Auto-fixable issues go to fixes.csv; the rest go to a person (see Fix List).") %}
+<div class="table-wrap"><table>
+  <thead><tr><th>ID</th><th>Check</th><th>Severity</th><th class="num">Issues</th><th class="num">Records</th><th class="num">Auto-fixable</th></tr></thead>
+  <tbody>
+  {% for check in report.checks %}
+    <tr>
+      <td><a href="#{{ check.id }}">{{ check.id }}</a></td>
+      <td><a href="#{{ check.id }}">{{ check.title }}</a></td>
+      <td>{{ severity(check.severity) }}</td>
+      <td class="num">{{ check.issue_count }}</td>
+      <td class="num">{{ check.record_count }}</td>
+      <td class="num">{{ check.auto_fixable_count }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endcall %}
+
+{% for check in report.checks %}
+<section class="check" id="{{ check.id }}">
+  <div class="check-head">
+    <h2 style="margin:0">{{ check.id }} {{ check.title }}</h2>
+    {{ severity(check.severity) }}
+    <span class="sample-badge">Sample data</span>
+  </div>
+  <dl>
+    <dt>Rule</dt><dd>{{ check.rule }}</dd>
+    <dt>Why it matters</dt><dd>{{ check.why_it_matters }}</dd>
+    <dt>Fix</dt><dd>{{ check.suggested_fix }}</dd>
+    <dt>SQL</dt><dd>{{ sql_link(sql_url, "checks/" ~ check.sql) }}</dd>
+    <dt>Found</dt><dd>{{ check.issue_count }} issues on {{ check.record_count }} records (sample data)</dd>
+  </dl>
+  {% if check.issues %}
+  <details{% if check.id in ("H01", "H09") %} open{% endif %}>
+    <summary>Show affected records{% if check.issues | length > 25 %} (first 25 of {{ check.issues | length }}){% endif %}</summary>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Record</th><th>Object</th><th>Field</th><th>Current value</th><th>Suggested value</th><th>Auto-fix</th></tr></thead>
+      <tbody>
+      {% for issue in check.issues[:25] %}
+        <tr>
+          <td><code>{{ issue.record_id }}</code></td>
+          <td>{{ issue.object }}</td>
+          <td><code>{{ issue.field }}</code></td>
+          <td>{{ issue.current_value if issue.current_value is not none else "(empty)" }}</td>
+          <td>{{ issue.suggested_value if issue.suggested_value is not none else "-" }}</td>
+          <td>{{ "Yes" if issue.auto_fixable else "No" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </details>
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}

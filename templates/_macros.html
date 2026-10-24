@@ -1,0 +1,23 @@
+{# Reusable pieces. Every metric goes through metric() so it always carries "Sample data". #}
+{% macro metric(id, title, note=None) -%}
+<figure class="metric" data-metric="{{ id }}">
+  <figcaption><span class="metric-title">{{ title }}</span><span class="sample-badge">Sample data</span></figcaption>
+  {{ caller() }}
+  {% if note %}<p class="metric-note">{{ note }}</p>{% endif %}
+</figure>
+{%- endmacro %}
+
+{% macro chart(id, spec, label, tall=False) -%}
+<div class="chart-box{{ ' tall' if tall }}">
+  <canvas data-chart="{{ id }}" role="img" aria-label="{{ label }}"></canvas>
+</div>
+<script type="application/json" id="chart-{{ id }}">{{ spec | tojson }}</script>
+{%- endmacro %}
+
+{% macro severity(level) -%}
+<span class="severity {{ level }}">{{ level | capitalize }}</span>
+{%- endmacro %}
+
+{% macro sql_link(sql_url, path) -%}
+<a href="{{ sql_url }}{{ path }}"><code>sql/{{ path }}</code></a>
+{%- endmacro %}

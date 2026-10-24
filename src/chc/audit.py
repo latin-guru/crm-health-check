@@ -83,6 +83,7 @@ def health_scores(con: duckdb.DuckDBPyConnection, issues: list[dict]) -> list[di
         scores.append(
             {
                 "object": object_name,
+                "label": table,
                 "total": total,
                 "flagged": len(flagged),
                 "score": round(100.0 * passing / total, 1) if total else 100.0,

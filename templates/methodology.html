@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "_macros.html" import severity, sql_link %}
+{% block content %}
+<h1>Methodology</h1>
+<p class="lede">Every definition used in this report, written so a sales or marketing manager can follow it. Each one links to the SQL that computes it.</p>
+
+<h2>Data</h2>
+<p>Seven CSV exports are loaded into DuckDB, an analytical SQL database that runs inside the Python process (no server). Six are shaped like HubSpot exports (owners, companies, contacts, deals, deal stage history, marketing touchpoints) and one like a Stripe-style billing export (subscriptions). The audit date is fixed at {{ settings.report.as_of }} so results are reproducible.</p>
+
+<h2>Normalization rules</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Rule</th><th>Definition</th><th>SQL</th></tr></thead>
+  <tbody>
+    <tr><td>Email key</td><td>Lowercase, trim spaces, drop a "+tag" before the @. Doesn't merge dotted Gmail variants or catch shared inboxes.</td><td>{{ sql_link(sql_url, "macros.sql") }}</td></tr>
+    <tr><td>Valid email</td><td>One @, no spaces, and a dot in the domain part.</td><td>{{ sql_link(sql_url, "macros.sql") }}</td></tr>
+    <tr><td>Domain key</td><td>Lowercase, remove http(s)://, a leading www. and any path. Can't tell subsidiaries or shared domains apart.</td><td>{{ sql_link(sql_url, "macros.sql") }}</td></tr>
+    <tr><td>CRM ARR</td><td>Deal amount (total contract value) x 12 / term in months. A missing term is read as 12 months and flagged by H07.</td><td>{{ sql_link(sql_url, "macros.sql") }}</td></tr>
+    <tr><td>Billing ARR</td><td>Price per interval x 12 for monthly plans, price for yearly plans. The export's <code>mrr</code> column holds the price per interval, even for yearly plans.</td><td>{{ sql_link(sql_url, "macros.sql") }}</td></tr>
+    <tr><td>Currency</td><td>Converted to USD with a fixed demo FX table ({% for cur, rate in settings.recon.fx_to_usd.items() %}{{ cur }} {{ rate }}{{ ", " if not loop.last }}{% endfor %}), not live rates.</td><td><code>config/reconciliation.yml</code></td></tr>
+    <tr><td>UTM values</td><td>Canonical values and aliases come from <code>config/utm_governance.yml</code>, matched case-insensitively.</td><td>{{ sql_link(sql_url, "checks/h09_utm_governance.sql") }}</td></tr>
+  </tbody>
+</table></div>
+
+<h2>Checks</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>ID</th><th>Check</th><th>Severity</th><th>Rule</th><th>SQL</th></tr></thead>
+  <tbody>
+  {% for check in report.checks %}
+    <tr><td>{{ check.id }}</td><td>{{ check.title }}</td><td>{{ severity(check.severity) }}</td><td>{{ check.rule }}</td><td>{{ sql_link(sql_url, "checks/" ~ check.sql) }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+
+<h2>Metrics</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Metric</th><th>Definition</th><th>SQL</th></tr></thead>
+  <tbody>
+    <tr><td>Health score</td><td>For contacts, companies and deals: records with no issue from any check / all records of that object.</td><td><code>src/chc/audit.py</code> (health_scores)</td></tr>
+    <tr><td>Open pipeline</td><td>Sum of amount (USD) for deals not in Closed won or Closed lost.</td><td>{{ sql_link(sql_url, "pipeline/open_pipeline_by_stage.sql") }}</td></tr>
+    <tr><td>Weighted forecast</td><td>Sum over open deals of amount x stage probability ({% for stage in settings.pipeline.stages if not stage.closed %}{{ stage.label }} {{ (stage.probability * 100) | round | int }}%{{ ", " if not loop.last }}{% endfor %}). Only as good as stage hygiene: stale deals inflate it.</td><td>{{ sql_link(sql_url, "pipeline/forecast_by_team.sql") }}</td></tr>
+    <tr><td>Stage conversion</td><td>Deals that ever reached the next stage / deals that ever reached this stage, from stage history.</td><td>{{ sql_link(sql_url, "pipeline/stage_conversion.sql") }}</td></tr>
+    <tr><td>Days in stage</td><td>Average of (time the deal left the stage - time it entered), completed visits only.</td><td>{{ sql_link(sql_url, "pipeline/days_in_stage.sql") }}</td></tr>
+    <tr><td>First / last touch</td><td>For each closed-won deal, the source of the primary contact's earliest / latest touch before the deal was created.</td><td>{{ sql_link(sql_url, "attribution/first_last_touch.sql") }}</td></tr>
+    <tr><td>Reconciliation</td><td>Per normalized domain: CRM closed-won ARR vs billing active ARR, both annual USD, sorted into one category.</td><td>{{ sql_link(sql_url, "recon/reconciliation.sql") }}</td></tr>
+  </tbody>
+</table></div>
+
+<h2>Reconciliation categories</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Category</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td>Matched</td><td>Both sides agree within ${{ "%.2f" | format(settings.recon.tolerance_usd) }} after normalization.</td></tr>
+    <tr><td>CRM-only</td><td>Closed-won in the CRM but no active subscription: never invoiced, billed elsewhere, or churned without a CRM update.</td></tr>
+    <tr><td>Billing-only</td><td>Active subscription with no closed-won deal: a self-serve signup or a sale never logged in the CRM.</td></tr>
+    <tr><td>Amount mismatch</td><td>Same currency, but the annual values differ: a discount, extra storefront, price change, or a deal with no amount.</td></tr>
+    <tr><td>Term mismatch</td><td>One side is exactly 12x the other: a monthly price entered as an annual value, or the reverse.</td></tr>
+    <tr><td>Currency mismatch</td><td>The CRM and billing record the account in different currencies.</td></tr>
+  </tbody>
+</table></div>
+
+<h2>What this demo doesn't do</h2>
+<p>It reads CSV files, not a live CRM. It doesn't write anything back: fixes are exported for a person to import. ARR here is contracted recurring value, not revenue recognized by finance.</p>
+{% endblock %}

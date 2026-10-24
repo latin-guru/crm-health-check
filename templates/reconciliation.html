@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "_macros.html" import metric, chart, sql_link %}
+{% set recon = report.recon %}
+{% block content %}
+<h1>Reconciliation</h1>
+<p class="lede">Why doesn't the CRM's closed-won ARR match billing? Each account is compared after converting both sides to annual USD, then sorted into one category with a one-sentence explanation.</p>
+
+<div class="grid cards">
+  {% call metric("crm-arr", "CRM closed-won ARR") %}
+  <div class="metric-value">{{ recon.crm_total | money }}</div>
+  {% endcall %}
+  {% call metric("billing-arr", "Billing active ARR") %}
+  <div class="metric-value">{{ recon.billing_total | money }}</div>
+  {% endcall %}
+  {% call metric("arr-gap", "Gap (billing minus CRM)", recon.rows | length ~ " accounts compared") %}
+  <div class="metric-value">{{ recon.gap | money }}</div>
+  {% endcall %}
+</div>
+
+<div class="grid two" style="margin-top:16px">
+  {% call metric("recon-waterfall", "From CRM ARR to billing ARR", "Each bar is the total delta of one category. Blue raises the number, red lowers it. The axis starts near the totals, not at zero.") %}
+  {{ chart("recon-waterfall", charts["recon-waterfall"], "Waterfall chart from CRM ARR to billing ARR by reconciliation category; values in the table") }}
+  {% endcall %}
+
+  {% call metric("recon-summary", "Accounts by category") %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Category</th><th class="num">Accounts</th><th class="num">Delta (USD/yr)</th></tr></thead>
+    <tbody>
+    {% for item in recon.summary %}
+      <tr><td class="status-pill">{{ item.status }}</td><td class="num">{{ item.accounts }}</td><td class="num">{{ item.delta | money }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endcall %}
+</div>
+
+<h2>Accounts that don't match</h2>
+{% call metric("recon-rows", "Row-level reconciliation", "Delta = billing ARR minus CRM ARR. Download the full table as reconciliation.csv.") %}
+<div class="table-wrap"><table>
+  <thead><tr><th>Account</th><th>Category</th><th class="num">CRM ARR</th><th class="num">Billing ARR</th><th class="num">Delta</th><th>Why this number looks off</th></tr></thead>
+  <tbody>
+  {% for row in recon.rows if row.status != "Matched" %}
+    <tr>
+      <td>{{ row.company_name or "(not in CRM)" }}<br><code>{{ row.domain }}</code></td>
+      <td class="status-pill">{{ row.status }}</td>
+      <td class="num">{{ row.crm_arr | money }}</td>
+      <td class="num">{{ row.billing_arr | money }}</td>
+      <td class="num">{{ row.delta | money }}</td>
+      <td>{{ row.explanation }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<p><a class="button" href="downloads/reconciliation.csv" download>Download reconciliation.csv</a></p>
+{% endcall %}
+
+<h2>How the join works</h2>
+<p class="lede">The CRM and billing don't share an ID, so accounts are joined on normalized domain (<code>https://www.Shop.example/</code> becomes <code>shop.example</code>). That's a compromise: two brands under one parent can share a domain, and a customer can be billed under a different one. In production you'd sync the CRM company ID into billing so the match is exact. Categories are checked in this order: Billing-only, CRM-only, Currency mismatch, Matched (within ${{ "%.2f" | format(settings.recon.tolerance_usd) }}), Term mismatch (one side exactly 12x the other), Amount mismatch.</p>
+<p class="metric-note">SQL: {{ sql_link(sql_url, "recon/reconciliation.sql") }} · normalization macros: {{ sql_link(sql_url, "macros.sql") }}</p>
+{% endblock %}
