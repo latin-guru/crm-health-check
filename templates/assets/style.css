@@ -107,7 +107,7 @@ h3 { font-size: 16px; margin: 0 0 6px; }
 .metric-value { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .metric-note { margin: 6px 0 0; color: var(--text-muted); font-size: 13px; }
 .chart-box { position: relative; height: 300px; }
-.chart-box.tall { height: 420px; }
+.chart-box.tall { height: 520px; }
 
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }

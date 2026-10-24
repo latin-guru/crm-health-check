@@ -56,7 +56,7 @@
             min: spec.min,
             ticks: { callback: (value) => format(value) },
           },
-          [spec.horizontal ? "y" : "x"]: { grid: { display: false } },
+          [spec.horizontal ? "y" : "x"]: { grid: { display: false }, ticks: { autoSkip: false } },
         },
       },
     });
